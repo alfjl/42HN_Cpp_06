@@ -3,7 +3,7 @@
 The goal of the **C++ modules 00 to 08** is to introduce the student to Object-Oriented Programming and the C++ programming language in general.
 Because of the complexity of the language, the students code has to comply with the C++98 standard.
 
-**C++ module 06** introduces the learner to the various ways of type casting.
+**C++ module 06** introduces the learner to the various concepts of type casting, such as upcast & downcast, static cast, dynamic cast, reinterpret cast and const cast, as well as cast operators.
 
 ## Description
 
@@ -12,7 +12,7 @@ Write a program that takes a string representation of a scalar type and convert 
 (conversion of scalar types)
 
 ex01:  
-Write a serialize() and a deserialize() function, converting pointer to uintptr_t and vice versa.  
+Write a serialize() and a deserialize() function, converting a pointer to a struct to type uintptr_t and vice versa.  
 (short intro to serialization of data types)
 
 ex02:  
@@ -21,9 +21,10 @@ Implement a Base class and three inheriting classes A, B, C. Write a function th
 
 ## Learnings
 
-Going deeper into type casting and data type identification.
+Going deeper into type casting, serialization of data and data type identification.
 
 ### Resources
 
 * [cplusplus.com](http://www.cplusplus.com/)
+* [typecasting overview](https://www.cplusplus.com/doc/tutorial/typecasting/)
 * [Serialization](https://www.codeproject.com/articles/225988/a-practical-guide-to-cplusplus-serialization)
