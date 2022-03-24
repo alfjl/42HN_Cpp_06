@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <exception>
 
 typedef enum e_type
 {
@@ -10,6 +11,7 @@ typedef enum e_type
     DOUBLE,
     NAN_INF,
     NANF_INFF,
+	IMPOSSIBLE,
     ERROR
 }           t_type;
 
@@ -48,4 +50,10 @@ public:
     double      getDouble(void) const;
 
     void        print(void);
+
+	//class OverflowingInputException : public std::exception
+	//{
+	//public:
+	//	virtual const char	*what() const throw();
+	//};
 };

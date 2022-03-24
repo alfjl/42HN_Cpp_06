@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cctype>
+#include <climits>
 #include "ScalarTypeConverterFromString.hpp"
 
 
@@ -13,6 +14,13 @@ ScalarTypeConverterFromString::ScalarTypeConverterFromString(std::string input) 
 {
     this->convertInput();
 }
+
+//ScalarTypeConverterFromString::ScalarTypeConverterFromString(std::string input)
+//{
+	//if (input > INT_MAX || input < INT_MIN)
+		//throw ScalarTypeConverterFromString::OverflowingInputException();
+    //this->convertInput();
+//}
 
 ScalarTypeConverterFromString::ScalarTypeConverterFromString(const ScalarTypeConverterFromString &other)
 {
@@ -78,11 +86,18 @@ int     ScalarTypeConverterFromString::checkInput(void)
         return (NANF_INFF);
     else if (this->_input.find_first_not_of("0123456789-+") == std::string::npos)
         return (INT);
+    else if (this->_input.find_first_not_of("0123456789-+") == std::string::npos)
+        return (INT);
     else if (this->_input.find_first_not_of("0123456789-+.") == std::string::npos)
         return (DOUBLE);
     else if (this->_input.find_first_not_of("0123456789-+.f") == std::string::npos)
-        return (FLOAT);
-    else if (this->_input.length() == 1 && std::isprint(this->_input[0]))
+	{
+		if (*(this->_input.rbegin()) != 'f')
+			return (IMPOSSIBLE);
+		else
+			return (FLOAT);
+	}
+	else if (this->_input.length() == 1 && std::isprint(this->_input[0]))
         return (CHAR);
     else
         return (ERROR);
@@ -92,17 +107,19 @@ void    ScalarTypeConverterFromString::convertInput(void)
 {
     this->_inputTypeFlag = checkInput();
    
-    if (_inputTypeFlag == NAN_INF)
+    if (this->_inputTypeFlag == NAN_INF)
         return ;
-    else if (_inputTypeFlag == NANF_INFF)
+    else if (this->_inputTypeFlag == NANF_INFF)
         return ;
-    else if (_inputTypeFlag == CHAR)
+    else if (this->_inputTypeFlag == IMPOSSIBLE)
+        return ;
+    else if (this->_inputTypeFlag == CHAR)
         convertFromChar();
-    else if (_inputTypeFlag == INT)
+    else if (this->_inputTypeFlag == INT)
         convertFromInt();
-    else if (_inputTypeFlag == FLOAT)
+    else if (this->_inputTypeFlag == FLOAT)
         convertFromFloat();
-    else if (_inputTypeFlag == DOUBLE)
+    else if (this->_inputTypeFlag == DOUBLE)
         convertFromDouble();
     else
         std::cerr << "Error: Input not printable!" << std::endl;
@@ -153,7 +170,7 @@ void        ScalarTypeConverterFromString::print(void)
 {
     if (this->_inputTypeFlag == ERROR)
         return ;
-    if (this->_inputTypeFlag != NAN_INF && this->_inputTypeFlag != NANF_INFF)
+    if (this->_inputTypeFlag != NAN_INF && this->_inputTypeFlag != NANF_INFF && this->_inputTypeFlag != IMPOSSIBLE) // ---------
     {
         if (std::isprint(this->_character))
             std::cout << "char: '" << this->_character << "'" << std::endl;
@@ -163,12 +180,12 @@ void        ScalarTypeConverterFromString::print(void)
     else
         std::cout << "char: impossible" << std::endl;
     
-    if (this->_inputTypeFlag != NAN_INF && this->_inputTypeFlag != NANF_INFF)
+    if (this->_inputTypeFlag != NAN_INF && this->_inputTypeFlag != NANF_INFF && this->_inputTypeFlag != IMPOSSIBLE) // ---------
         std::cout << "int: " << this->_integer << std::endl;
     else
         std::cout << "int: impossible" << std::endl;
     
-    if (this->_inputTypeFlag != NAN_INF && this->_inputTypeFlag != NANF_INFF)
+    if (this->_inputTypeFlag != NAN_INF && this->_inputTypeFlag != NANF_INFF && this->_inputTypeFlag != IMPOSSIBLE) // --------
     {
         std::cout << "float: " << this->_floatingPointNumber;
         if (this->_floatingPointNumber - static_cast<int>(this->_floatingPointNumber) == 0)
@@ -179,7 +196,9 @@ void        ScalarTypeConverterFromString::print(void)
     }
     else
     {
-        if (this->_input == "nan" || this->_input == "nanf")
+		if (this->_inputTypeFlag == IMPOSSIBLE)
+			std::cout << "float: impossible" << std::endl;
+		else if (this->_input == "nan" || this->_input == "nanf")
             std::cout << "float: nanf" << std::endl;
         else if (this->_input[0] == '+')
             std::cout << "float: +inff" << std::endl;
@@ -187,7 +206,7 @@ void        ScalarTypeConverterFromString::print(void)
             std::cout << "float: -inff" << std::endl;
     }
 
-    if (this->_inputTypeFlag != NAN_INF && this->_inputTypeFlag != NANF_INFF)
+    if (this->_inputTypeFlag != NAN_INF && this->_inputTypeFlag != NANF_INFF && this->_inputTypeFlag != IMPOSSIBLE) // ---------
     {
         std::cout << "double: " << this->_doublePrecisionNumber;
         if (this->_doublePrecisionNumber - static_cast<int>(this->_doublePrecisionNumber) == 0)
@@ -196,7 +215,9 @@ void        ScalarTypeConverterFromString::print(void)
     }
     else
     {
-        if (this->_input == "nan" || this->_input == "nanf")
+		if (this->_inputTypeFlag == IMPOSSIBLE)
+			std::cout << "double: impossible" << std::endl;
+		else if (this->_input == "nan" || this->_input == "nanf")
             std::cout << "double: nan" << std::endl;
         else if (this->_input[0] == '+')
             std::cout << "double: +inf" << std::endl;
@@ -204,3 +225,8 @@ void        ScalarTypeConverterFromString::print(void)
             std::cout << "double: -inf" << std::endl;
     }
 }
+
+//const char	*ScalarTypeConverterFromString::OverflowingInputException::what() const throw()
+//{
+//	return ("Error: Input out of bounds");
+//}
