@@ -20,7 +20,6 @@ debug: $(OBJ)
 
 clean:
 	rm -f *.o *~
-	rm -f *.out
 
 fclean: clean
 	rm -f $(NAME)
