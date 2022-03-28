@@ -79,7 +79,7 @@ int     ScalarTypeConverterFromString::checkInput(void)
     if (this->_input == "nan" || this->_input == "+inf" || this->_input == "-inf"
 		|| this->_input == "nanf" || this->_input == "+inff" || this->_input == "-inff")
         return (NAN_INF);
-	else if (this->_input == "f") // dirty workaround. Better find other solution.
+	else if (this->_input.length() == 1 && (this->_input[0] == 'f' || this->_input[0] == '-' || this->_input[0] == '+' || this->_input[0] == '.'))
 		return (CHAR);
     else if (this->_input.find_first_not_of("0123456789-+") == std::string::npos)
         return (INT);
@@ -92,7 +92,7 @@ int     ScalarTypeConverterFromString::checkInput(void)
 		else
 			return (FLOAT);
 	}
-	else if (this->_input.length() == 1 && std::isprint(this->_input[0]))
+	else if ((this->_input.length() == 1 && std::isprint(this->_input[0])) || (this->_input.length() == 1 && std::isalpha(this->_input[0])))
         return (CHAR);
     else
         return (ERROR);
@@ -120,6 +120,7 @@ void    ScalarTypeConverterFromString::convertInput(void)
 
 void    ScalarTypeConverterFromString::convertFromChar(void)
 {
+    //this->_character = static_cast<unsigned char>(this->_input[0]);
     this->_character = static_cast<unsigned char>(this->_input[0]);
     this->_integer = static_cast<int>(this->_character);
     this->_floatingPointNumber = static_cast<float>(this->_character);
